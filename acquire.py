@@ -1,52 +1,31 @@
+'''
+Module to encapsulate data acquisition.
 
-import pandas as pd
-import requests
+Primary functions to use are
+
+- get_store_item_demand_data()
+- get_opsd_data()
+
+If you want to get the individual datasets from the store item demand data you
+can do so with
+
+- get_items_data
+- get_stores_dat
+- get_sales_data
+'''
 import os
-
-
-
-
-#Define a function to read all items data and return a dataframe
-def get_items():
-    
-    base_url = 'https://python.zgulde.net'
-    
-    response = requests.get('https://python.zgulde.net/api/v1/items')
-    
-    data = response.json()
-    
-    items = pd.DataFrame(data['payload']['items'])
-    
-    next_page = data['payload']['next_page']
-    
-    while next_page != None:
-        
-        response = requests.get(base_url + next_page)
-        
-        data = response.json()
-        
-        next_page = data['payload']['next_page']
-        
-        new_items = pd.DataFrame(data['payload']['items'])
-        
-        items = pd.concat([items, new_items])
-    
-    items.reset_index(drop=True, inplace=True)
-    
-    #items.to_csv('items.csv')
-    
-    return items
-
+import requests
+import pandas as pd
 
 def get_store_data_from_api():
-    response = requests.get('https://api.data.codeup.com/api/v1/stores')
+    response = requests.get('https://python.zgulde.net/api/v1/stores')
     data = response.json()
     stores = pd.DataFrame(data['payload']['stores'])
     stores = pd.DataFrame(stores)
     return stores
 
 def get_items_data_from_api():
-    domain = 'https://api.data.codeup.com'
+    domain = 'https://python.zgulde.net'
     endpoint = '/api/v1/items'
     items = []
     while True:
@@ -62,7 +41,7 @@ def get_items_data_from_api():
     return items
 
 def get_sales_data_from_api():
-    base_url = 'https://api.data.codeup.com/api/v1/sales?page='
+    base_url = 'https://python.zgulde.net/api/v1/sales?page='
     sales = []
     url = base_url + str(1)
     response = requests.get(url)
